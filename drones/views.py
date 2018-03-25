@@ -164,3 +164,32 @@ http POST :8000/competitions/ distance_in_feet=2800 distance_achievement_date="2
 http POST :8000/competitions/ distance_in_feet=790 distance_achievement_date="2017-10-20T05:43:20.776594Z" pilot="Peter Perfect" drone="Atom"  
 
 """
+
+
+
+"""
+http POST :8000/drone-categories/ name="Quadcopter"
+
+http POST :8000/pilots/ name="Penelope Pitstop" gender="F"     races_count=0
+
+HTTP/1.0 201 Created
+Allow: GET, POST, HEAD, OPTIONS
+Content-Length: 194
+Content-Type: application/json
+Date: Sun, 25 Mar 2018 09:51:39 GMT
+Location: http://localhost:8000/pilots/1
+Server: WSGIServer/0.2 CPython/3.5.3
+Vary: Accept, Cookie
+X-Frame-Options: SAMEORIGIN
+
+{
+    "competitions": [],
+    "gender": "F",
+    "gender_description": "Female",
+    "inserted_timestamp": "2018-03-25T09:51:39.637148Z",
+    "name": "Penelope Pitstop",
+    "races_count": 0,
+    "url": "http://localhost:8000/pilots/1"
+}
+
+"""
