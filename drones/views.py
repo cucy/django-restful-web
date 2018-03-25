@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import permissions
+from rest_framework.throttling import ScopedRateThrottle  
 
 from drones import custompermission
 from drones.filters import CompetitionFilter
@@ -57,6 +58,8 @@ class DroneCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class DroneList(generics.ListCreateAPIView):
     """ 无人机列表 """
+    throttle_scope = 'drones'
+    throttle_classes = (ScopedRateThrottle,)
     queryset = Drone.objects.all()
     serializer_class = DroneSerializer
     name = 'drone-list'
@@ -72,6 +75,8 @@ class DroneList(generics.ListCreateAPIView):
 
 class DroneDetail(generics.RetrieveUpdateDestroyAPIView):
     """ 无人机详情 """
+    throttle_scope = 'drones'
+    throttle_classes = (ScopedRateThrottle,)
     queryset = Drone.objects.all()
     serializer_class = DroneSerializer
     name = 'drone-detail'
@@ -302,4 +307,11 @@ X-Frame-Options: SAMEORIGIN
 }
 
   curl -iX GET http://localhost:8000/pilots/ -H "Authorization: Token   PASTE-TOKEN-HERE"
+"""
+
+
+
+"""
+速率限制
+    for i in {1..4}; do http :8000/competitions/; done;
 """
