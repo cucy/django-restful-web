@@ -145,5 +145,7 @@ REST_FRAMEWORK = {
         'anon': '3/hour',
         'user': '10/hour',
         'drones': '20/hour',
-        'pilots': '15/hour', }
+        'pilots': '15/hour', },
+    # 版本控制
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }

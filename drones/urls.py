@@ -1,19 +1,21 @@
 from django.conf.urls import url
 from .views import (DroneCategoryList, DroneCategoryDetail, DroneList, DroneDetail, PilotList, PilotDetail,
                     CompetitionList, CompetitionDetail, ApiRoot)
+from drones import views
+
+from drones.v2 import views as views_v2
 
 urlpatterns = [
-    url(r'^drone-categories/$', DroneCategoryList.as_view(), name=DroneCategoryList.name),
-    url(r'^drone-categories/(?P<pk>[0-9]+)$', DroneCategoryDetail.as_view(), name=DroneCategoryDetail.name),
+    url(r'^vehicle-categories/$', views.DroneCategoryList.as_view(), name=views.DroneCategoryList.name),
+    url(r'^vehicle-categories/(?P<pk>[0-9]+)$', views.DroneCategoryDetail.as_view(),
+        name=views.DroneCategoryDetail.name),
+    url(r'^vehicles/$', views.DroneList.as_view(), name=views.DroneList.name),
+    url(r'^vehicles/(?P<pk>[0-9]+)$', views.DroneDetail.as_view(), name=views.DroneDetail.name),
+    url(r'^pilots/$', views.PilotList.as_view(), name=views.PilotList.name),
+    url(r'^pilots/(?P<pk>[0-9]+)$', views.PilotDetail.as_view(), name=views.PilotDetail.name),
+    url(r'^competitions/$', views.CompetitionList.as_view(), name=views.CompetitionList.name),
+    url(r'^competitions/(?P<pk>[0-9]+)$', views.CompetitionDetail.as_view(), name=views.CompetitionDetail.name),
 
-    url(r'^drones/$', DroneList.as_view(), name=DroneList.name),
-    url(r'^drones/(?P<pk>[0-9]+)$', DroneDetail.as_view(), name=DroneDetail.name),
+    url(r'^$', views_v2.ApiRootVersion2.as_view(), name=views_v2.ApiRootVersion2.name),
 
-    url(r'^pilots/$', PilotList.as_view(), name=PilotList.name),
-    url(r'^pilots/(?P<pk>[0-9]+)$', PilotDetail.as_view(), name=PilotDetail.name),
-
-    url(r'^competitions/$', CompetitionList.as_view(), name=CompetitionList.name),
-    url(r'^competitions/(?P<pk>[0-9]+)$', CompetitionDetail.as_view(), name=CompetitionDetail.name),
-
-    url(r'^$', ApiRoot.as_view(), name=ApiRoot.name),
 ]
