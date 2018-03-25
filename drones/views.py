@@ -2,7 +2,9 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework import permissions
 
+from drones import custompermission
 from drones.filters import CompetitionFilter
 from drones.models import DroneCategory
 from drones.models import Drone
@@ -58,6 +60,12 @@ class DroneList(generics.ListCreateAPIView):
     name = 'drone-list'
 
     filter_fields = ('name', 'drone_category', 'manufacturing_date', 'has_it_competed',)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          custompermission.IsCurrentUserOwnerOrReadOnly,  # 自定义权限
+                          )
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class DroneDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -65,6 +73,9 @@ class DroneDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Drone.objects.all()
     serializer_class = DroneSerializer
     name = 'drone-detail'
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly, custompermission.IsCurrentUserOwnerOrReadOnly,
+    )
 
 
 class PilotList(generics.ListCreateAPIView):
@@ -89,7 +100,7 @@ class CompetitionList(generics.ListCreateAPIView):
     queryset = Competition.objects.all()
     serializer_class = PilotCompetitionSerializer
     name = 'competition-list'
-    filter_class =CompetitionFilter
+    filter_class = CompetitionFilter
 
 
 class CompetitionDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -227,4 +238,28 @@ curl -iX POST -H "Content-Type: application/json" -d '{"name":"RV-3", "drone_cat
 curl -iX POST -H "Content-Type: application/json" -d '{"name":"Dusty", "drone_category":"Quadcopter", "manufacturing_date": "2017-07-20T02:02:00.716312Z", "has_it_competed": "false"}' localhost:8000/drones/   
 curl -iX POST -H "Content-Type: application/json" -d '{"name":"Ripslinger", "drone_category":"Octocopter", "manufacturing_date": "2017-08-20T02:02:00.716312Z", "has_it_competed": "false"}' localhost:8000/drones/   
 curl -iX POST -H "Content-Type: application/json" -d '{"name":"Skipper", "drone_category":"Quadcopter", "manufacturing_date": "2017-09-20T02:02:00.716312Z", "has_it_competed": "false"}' localhost:8000/drones/  
+"""
+
+"""
+# 认证权限
+http POST :8000/drones/ name="Python Drone" drone_category="Quadcopter" manufacturing_date="2017-07-16T02:03:00.716312Z" has_it_competed=false
+HTTP/1.0 401 Unauthorized
+Allow: GET, POST, HEAD, OPTIONS
+Content-Length: 58
+Content-Type: application/json
+Date: Sun, 25 Mar 2018 11:27:11 GMT
+Server: WSGIServer/0.2 CPython/3.5.3
+Vary: Accept, Cookie
+WWW-Authenticate: Basic realm="api"
+X-Frame-Options: SAMEORIGIN
+
+{
+    "detail": "Authentication credentials were not provided."
+}
+
+
+http -a "djangosuper":"passwordforsuper" POST :8000/drones/ name="Python Drone" drone_category="Quadcopter" manufacturing_date="2017-07-16T02:03:00.716312Z" has_it_competed=false
+
+http -a "user01":"user01password" PATCH :8000/drones/12 has_it_competed=true
+    http -a "user01":"user01password" GET :8000/drones/12
 """
