@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # Django REST framework
     'rest_framework',
     'django_filters',
+    'rest_framework.authtoken',
 
 ]
 
