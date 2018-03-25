@@ -12,11 +12,19 @@ from drones.serializers import PilotSerializer
 from drones.serializers import PilotCompetitionSerializer
 
 
+from rest_framework.pagination import LimitOffsetPagination
+
+class LimitOffsetPaginationWithUpperBound(LimitOffsetPagination):
+    # Set the maximum limit value to 8
+    max_limit = 8
+
+
 class DroneCategoryList(generics.ListCreateAPIView):
     """
     无人机类别列表
     /drone-categories/ --->> GET, POST, and OPTIONS
     """
+    pagination_class = LimitOffsetPaginationWithUpperBound
 
     queryset = DroneCategory.objects.all()
     serializer_class = DroneCategorySerializer
