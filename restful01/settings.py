@@ -141,11 +141,13 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',),
+
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '3/hour',
-        'user': '10/hour',
-        'drones': '20/hour',
-        'pilots': '15/hour', },
+        'anon': '300/hour',
+        'user': '100/hour',
+        'drones': '200/hour',
+        'pilots': '150/hour', },
     # 版本控制
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
+

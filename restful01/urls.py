@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url,include
+from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
@@ -26,6 +26,6 @@ urlpatterns = [
     url(r'^v2/', include('drones.v2.urls', namespace='v2')),
     url(r'^v2/api-auth/', include('rest_framework.urls', namespace='rest_framework_v2')),
 
-
+    url(r'^api-auth/', include('rest_framework.urls'))
 
 ]
