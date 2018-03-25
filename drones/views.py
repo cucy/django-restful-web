@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+
+from drones.filters import CompetitionFilter
 from drones.models import DroneCategory
 from drones.models import Drone
 from drones.models import Pilot
@@ -87,6 +89,7 @@ class CompetitionList(generics.ListCreateAPIView):
     queryset = Competition.objects.all()
     serializer_class = PilotCompetitionSerializer
     name = 'competition-list'
+    filter_class =CompetitionFilter
 
 
 class CompetitionDetail(generics.RetrieveUpdateDestroyAPIView):
