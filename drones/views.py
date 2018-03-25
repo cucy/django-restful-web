@@ -11,12 +11,16 @@ from drones.serializers import DroneSerializer
 from drones.serializers import PilotSerializer
 from drones.serializers import PilotCompetitionSerializer
 
-
 from rest_framework.pagination import LimitOffsetPagination
+
 
 class LimitOffsetPaginationWithUpperBound(LimitOffsetPagination):
     # Set the maximum limit value to 8
     max_limit = 8
+
+
+from rest_framework import filters
+from django_filters import AllValuesFilter, DateTimeFilter, NumberFilter
 
 
 class DroneCategoryList(generics.ListCreateAPIView):
@@ -24,11 +28,15 @@ class DroneCategoryList(generics.ListCreateAPIView):
     无人机类别列表
     /drone-categories/ --->> GET, POST, and OPTIONS
     """
-    pagination_class = LimitOffsetPaginationWithUpperBound
+    # pagination_class = LimitOffsetPaginationWithUpperBound
 
     queryset = DroneCategory.objects.all()
     serializer_class = DroneCategorySerializer
     name = 'dronecategory-list'
+
+    filter_fields = ('name',)
+    search_fields = ('^name',)
+    ordering_fields = ('name', 'manufacturing_date',)
 
 
 class DroneCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -47,6 +55,8 @@ class DroneList(generics.ListCreateAPIView):
     serializer_class = DroneSerializer
     name = 'drone-list'
 
+    filter_fields = ('name', 'drone_category', 'manufacturing_date', 'has_it_competed',)
+
 
 class DroneDetail(generics.RetrieveUpdateDestroyAPIView):
     """ 无人机详情 """
@@ -60,6 +70,9 @@ class PilotList(generics.ListCreateAPIView):
     queryset = Pilot.objects.all()
     serializer_class = PilotSerializer
     name = 'pilot-list'
+    filter_fields = ('name', 'gender', 'races_count',)
+    search_fields = ('^name',)
+    ordering_fields = ('name', 'races_count')
 
 
 class PilotDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -91,8 +104,6 @@ class ApiRoot(generics.GenericAPIView):
                          'drones': reverse(DroneList.name, request=request),
                          'pilots': reverse(PilotList.name, request=request),
                          'competitions': reverse(CompetitionList.name, request=request)})
-
-
 
 
 """
@@ -173,8 +184,6 @@ http POST :8000/competitions/ distance_in_feet=790 distance_achievement_date="20
 
 """
 
-
-
 """
 http POST :8000/drone-categories/ name="Quadcopter"
 
@@ -201,7 +210,6 @@ X-Frame-Options: SAMEORIGIN
 }
 
 """
-
 
 """
 # 分页
