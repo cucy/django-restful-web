@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'toys.apps.ToysConfig',
+    "drones.apps.DronesConfig",
 
     # Django REST framework
     'rest_framework',
